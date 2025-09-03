@@ -1,0 +1,12 @@
+/* Cor de fundo da página */
+body {
+    background-color: #f0f0f0;
+}
+
+/* Estilo dos parágrafos */
+p {
+    color: #333333;
+    border: 1px solid #000000;
+    padding: 10px;
+    margin-bottom: 10px;
+}
