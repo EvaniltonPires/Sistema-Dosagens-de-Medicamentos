@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dose Certa</title>
+    <!-- Ícones Font Awesome para o visual -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+     <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <!-- Cabeçalho Principal -->
+    <div class="header-top">
+        <div class="header-left">
+            <!-- Logo - Usei um placeholder com o nome do app caso a imagem real não carregue -->
+            <img src='img/logo.png' alt="Logo Dose Certa" class="logo" 
+                 onerror="this.onerror=null; this.src='https://placehold.co/150x40/650d8d/ffffff?text=Dose+Certa'">
+            <span class="site-title"></span>
+        </div>
+        
+        <div class="top-buttons">
+            <button class="top-button login">Login</button>
+            <button class="top-button cadastro">Cadastro</button>
+        </div>
+    </div>
+    
+    <!-- Conteúdo Principal do Menu -->
+    <div class="container">
+        <h1 class="main-heading"></h1>
+
+        <div class="botoes-principais">
+            
+            <!-- Botão Regra de Três -->
+            <button class="botao-ferramenta" onclick="openRuleOfThreeModal()">
+                <i class="fa-solid fa-calculator"></i> 
+                <div class="label">Regra de Três</div>
+            </button>
+            
+            <!-- Botão Conversão -->
+            <button class="botao-ferramenta" onclick="openConversionModal()">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                <div class="label">Conversão (Peso)</div>
+            </button>
+
+            <!-- Botão Gotejamento (NOVO) -->
+            <button class="botao-ferramenta" onclick="openDripRateModal()">
+                <i class="fa-solid fa-droplet"></i>
+                <div class="label">Gotejamento</div>
+            </button>
+
+            <!-- Botão Calculadora Básica -->
+            <button class="botao-ferramenta" onclick="openCalculatorModal()">
+                <i class="fa-solid fa-table-cells"></i>
+                <div class="label">Calculadora Básica</div>
+            </button>
+        </div>
+
+        <div class="botoes-secundarios">
+            <!-- Funcionalidades futuras (Sem JS implementado, mas prontos para uso) -->
+            <button class="botao-secundario">Cadastrar Medicamento</button>
+            <button class="botao-secundario">Histórico de Cálculos</button>
+        </div>
+    </div>
+    
+    <!-- Rodapé Sobre -->
+    <div class="rodape-sobre">
+        <h2>Sobre o Dose Certa</h2>
+        <p>
+            O Dose Certa é um sistema web que auxilia profissionais de enfermagem em cálculos de medicação e gotejamento com rapidez e segurança, reduzindo erros e garantindo mais confiança no cuidado ao paciente.
+        </p>
+    </div>
+
+    <!-- --------------------------------------- MODAIS --------------------------------------- -->
+
+    <!-- 1. MODAL DA REGRA DE TRÊS -->
+    <div id="ruleOfThreeModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeRuleOfThreeModal()" aria-label="Fechar Regra de Três">&times;</button>
+            <h2 class="calculator-title">Cálculo: Regra de Três Simples</h2>
+            
+            <div id="regra-de-tres-simples">
+                <p style="text-align: center; margin-bottom: 20px; font-size: 0.9em; color: #555;">
+                    Preencha os valores conhecidos para encontrar o valor desconhecido (X).
+                </p>
+                <div class="rot-visual">
+                    <span>A &rarr; B</span>
+                    <span>C &rarr; X</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="rotA">Valor A (Ex: Concentração/Dose Conhecida):</label> 
+                    <input type="number" id="rotA" value="1" required min="0" oninput="calculateRuleOfThree()">
+                </div>
+                
+                <div class="input-group">
+                    <label for="rotB">Valor B (Ex: Volume/Quantidade Correspondente):</label> 
+                    <input type="number" id="rotB" value="1" required min="0" oninput="calculateRuleOfThree()">
+                </div>
+
+                <div class="input-group">
+                    <label for="rotC">Valor C (Ex: Dose/Quantidade Desejada):</label> 
+                    <input type="number" id="rotC" value="1" required min="0" oninput="calculateRuleOfThree()">
+                </div>
+                
+                <button type="button" class="calculator-btn" onclick="calculateRuleOfThree()">Calcular X</button> 
+            </div>
+            
+            <div class="result-display">
+                <h3>Valor Desconhecido (X):</h3>
+                <span id="ruleOfThreeResult" class="result-value">0.0000</span>
+                <p id="rotError" class="error-message"></p>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- 2. MODAL DE CONVERSÃO -->
+    <div id="conversionModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeConversionModal()" aria-label="Fechar Conversão">&times;</button>
+            <h2 class="calculator-title">Conversão de Unidades de Peso</h2>
+            
+            <div id="conversor-peso">
+                
+                <div class="input-group">
+                    <label for="conversionValue">Valor a Converter:</label> 
+                    <input type="number" id="conversionValue" value="1" required min="0" oninput="converter()">
+                </div>
+
+                <div class="conversion-input-row">
+                    <div class="input-group">
+                        <label for="conversionFromUnit">De (Unidade Original):</label> 
+                        <select id="conversionFromUnit" onchange="converter()"> 
+                            <option value="g">Gramas (g)</option> 
+                            <option value="mg" selected>Miligramas (mg)</option> 
+                            <option value="mcg">Microgramas (µg)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="conversionToUnit">Para (Unidade Final):</label> 
+                        <select id="conversionToUnit" onchange="converter()"> 
+                            <option value="g">Gramas (g)</option> 
+                            <option value="mg">Miligramas (mg)</option> 
+                            <option value="mcg" selected>Microgramas (µg)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="button" class="calculator-btn" onclick="converter()">Converter</button> 
+            </div>
+            
+            <div class="result-display">
+                <h3>Resultado da Conversão:</h3>
+                <span id="conversionResult" class="result-value">0.000000</span>
+                <p id="conversionError" class="error-message"></p>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- 3. MODAL DE GOTEJAMENTO (NOVO) -->
+    <div id="dripRateModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeDripRateModal()" aria-label="Fechar Gotejamento">&times;</button>
+            <h2 class="calculator-title">Cálculo de Gotejamento</h2>
+            
+            <div id="gotejamento-calculadora">
+                <p style="text-align: center; margin-bottom: 20px; font-size: 0.9em; color: #555;">
+                    Calcule o gotejamento em gotas/min ou microgotas/min.
+                </p>
+
+                <div class="input-group">
+                    <label for="volume">Volume Total (ml):</label> 
+                    <input type="number" id="volume" value="500" required min="0" oninput="calculateDripRate()">
+                </div>
+                
+                <div class="input-group">
+                    <label for="timeHours">Tempo de Infusão (horas):</label> 
+                    <input type="number" id="timeHours" value="8" required min="0.1" oninput="calculateDripRate()">
+                </div>
+
+                <div class="input-group">
+                    <label for="dripFactor">Fator de Gotejamento (Gotas/ml):</label> 
+                    <select id="dripFactor" onchange="calculateDripRate()">
+                        <option value="20" selected>Macrogotas (20 gotas/ml)</option>
+                        <option value="60">Microgotas (60 microgotas/ml)</option>
+                    </select>
+                </div>
+                
+                <button type="button" class="calculator-btn" onclick="calculateDripRate()">Calcular Gotejamento</button> 
+            </div>
+            
+            <div class="result-display">
+                <h3>Taxa de Gotejamento:</h3>
+                <span id="dripRateResult" class="result-value">0.0 gotas/min</span>
+                <p id="dripRateError" class="error-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. MODAL DA CALCULADORA BÁSICA -->
+    <div id="calculatorModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeCalculatorModal()" aria-label="Fechar Calculadora Básica">&times;</button>
+            <h2 class="calculator-title">Calculadora Básica</h2>
+            
+            <div id="calculadora-simples">
+                
+                <div class="input-group">
+                    <label for="calcNum1">Número 1 (Base):</label> 
+                    <input type="number" id="calcNum1" value="0" required oninput="calcular()">
+                </div>
+                
+                <div class="input-group">
+                    <label for="calcOperacao">Operação:</label> 
+                    <select id="calcOperacao" onchange="calcular()"> 
+                        <option value="soma">Soma (+)</option> 
+                        <option value="subtracao">Subtração (-)</option> 
+                        <option value="multiplicacao">Multiplicação (x)</option> 
+                        <option value="divisao">Divisão (/)</option> 
+                        <option value="potencia">Potência (a^b)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="calcNum2">Número 2 (Expoente/Segundo Operando):</label> 
+                    <input type="number" id="calcNum2" value="0" required oninput="calcular()">
+                </div>
+                
+                <button type="button" class="calculator-btn" onclick="calcular()">Calcular</button> 
+            </div>
+            
+            <div class="result-display">
+                <h3>Resultado:</h3>
+                <span id="resultado" class="result-value">0.0000</span>
+                <p id="calcError" class="error-message"></p>
+            </div>
+
+        </div>
+    </div>
+    
+   <!-- ✅ Importação do JavaScript externo -->
+    <script src="script.js"></script>
+</body>
+</html>
+ 
